@@ -1,6 +1,6 @@
 import requests
 
-KEY = "RGAPI-68bb0bf6-0811-4d37-a142-dfb1a749f7de"
+KEY = "RGAPI-554b5b7b-e30b-4c20-ba70-8dff97755aaa"
 
 def getApiUrl(URL, key, arg) :
     return URL + arg + "?api_key=" + key
