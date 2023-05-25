@@ -19,17 +19,23 @@ def getPlayerInfo(name):
 
     apiRequest = getApiUrl("https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/", KEY, playerID)
 
-    info = requests .get(apiRequest).json()
+    info = requests.get(apiRequest).json()
+
+    print(info)
 
     playerRank  = []
-    playerWinrate = []
     playerLP = []
+    playerWins = []
+    playerLosses = []
 
     for i in range(len(info)):
         playerRank.append(info[i]["tier"] + ": " + info[i]["rank"])
-        playerWinrate.append(round(info[i]["wins"] / (info[i]["wins"] + info[i]["losses"]), 2))
+        playerWins.append(info[i]["wins"])
+        playerLosses.append(info[i]["losses"])
         playerLP.append(info[i]["leaguePoints"])
 
-    print(f"Ranks: {playerRank}, Winrates: {playerWinrate}, LP: {playerLP}")
+    #round(info[i]["wins"] / (info[i]["wins"] + info[i]["losses"]), 2)
 
-    return [playerName, playerLvl, playerRank, playerLP, playerWinrate]
+    print(f"Ranks: {playerRank}, Wins: {playerWins}, Losses: {playerLosses}, LP: {playerLP}")
+
+    return [playerName, playerLvl, playerRank, playerWins, playerLosses, playerLP]
