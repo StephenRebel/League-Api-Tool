@@ -1,6 +1,8 @@
 import requests
+import urllib.request
+import os
 
-KEY = "RGAPI-554b5b7b-e30b-4c20-ba70-8dff97755aaa"
+KEY = "RGAPI-159c5b0b-00ed-4fa3-a195-791138f45108"
 
 def getApiUrl(URL, key, arg) :
     return URL + arg + "?api_key=" + key
@@ -11,31 +13,52 @@ def getPlayerInfo(name):
 
     info = requests.get(apiRequest).json()
 
-    playerID = info["id"]
-    playerLvl = info["summonerLevel"]
-    playerName = info["name"]
-
-    print(f"Name: {playerName}, Player Level: {playerLvl}, Player ID: {playerID}")
-
-    apiRequest = getApiUrl("https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/", KEY, playerID)
-
-    info = requests.get(apiRequest).json()
-
-    print(info)
+    version = requests.get("https://ddragon.leagueoflegends.com/api/versions.json").json()[0]
 
     playerRank  = []
     playerLP = []
     playerWins = []
     playerLosses = []
+    playerGamesPlayed = []
+    playerWinrate = []
 
-    for i in range(len(info)):
-        playerRank.append(info[i]["tier"] + ": " + info[i]["rank"])
-        playerWins.append(info[i]["wins"])
-        playerLosses.append(info[i]["losses"])
-        playerLP.append(info[i]["leaguePoints"])
+    try:
+        playerID = info["id"]
+        playerLvl = info["summonerLevel"]
+        playerName = info["name"]
+        playerPfp = urllib.request.urlopen(f"https://ddragon.leagueoflegends.com/cdn/{version}/img/profileicon/{info['profileIconId']}.png").read()
+    except:
+        playerID = "No Data"
+        playerLvl = "No Data"
+        playerName = "No Data"
+        playerRank  =       ["No Data", "No Data"]
+        playerLP =          ["No Data", "No Data"]
+        playerWins =        ["No Data", "No Data"]
+        playerLosses =      ["No Data", "No Data"]
+        playerGamesPlayed = ["No Data", "No Data"]
+        playerWinrate =     ["No Data", "No Data"]
+        playerPfp = "No Data"
 
-    #round(info[i]["wins"] / (info[i]["wins"] + info[i]["losses"]), 2)
+        return [playerName, playerLvl, playerRank, playerWins, playerLosses, playerLP, playerGamesPlayed, playerWinrate, playerPfp]
 
-    print(f"Ranks: {playerRank}, Wins: {playerWins}, Losses: {playerLosses}, LP: {playerLP}")
+    apiRequest = getApiUrl("https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/", KEY, playerID)
 
-    return [playerName, playerLvl, playerRank, playerWins, playerLosses, playerLP]
+    info = requests.get(apiRequest).json()
+
+    for i in range(2):
+        try:
+            playerRank.append(info[i]["tier"] + ": " + info[i]["rank"])
+            playerWins.append(info[i]["wins"])
+            playerLosses.append(info[i]["losses"])
+            playerLP.append(info[i]["leaguePoints"])
+            playerGamesPlayed.append(playerWins[i] + playerLosses[i])
+            playerWinrate.append(round(playerWins[i] / playerGamesPlayed[i], 2))
+        except IndexError:
+            playerRank.append("No Data")
+            playerWins.append("No Data")
+            playerLosses.append("No Data")
+            playerLP.append("No Data")
+            playerGamesPlayed.append("No Data")
+            playerWinrate.append("No Data")
+
+    return [playerName, playerLvl, playerRank, playerWins, playerLosses, playerLP, playerGamesPlayed, playerWinrate, playerPfp]
