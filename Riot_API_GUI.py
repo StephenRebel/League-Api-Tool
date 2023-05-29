@@ -1,5 +1,5 @@
 import sys
-from Riot_API_Testing import getPlayerInfo
+from Riot_API_Access import getPlayerInfo
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QMainWindow, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QGridLayout, QMessageBox
