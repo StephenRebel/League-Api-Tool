@@ -1,8 +1,7 @@
 import requests
 import urllib.request
-import os
 
-KEY = "RGAPI-159c5b0b-00ed-4fa3-a195-791138f45108"
+KEY = "RGAPI-cea38e04-8e39-4d2e-b829-f918d31d1b8d"
 
 def getApiUrl(URL, key, arg) :
     return URL + arg + "?api_key=" + key
@@ -52,7 +51,7 @@ def getPlayerInfo(name):
             playerLosses.append(info[i]["losses"])
             playerLP.append(info[i]["leaguePoints"])
             playerGamesPlayed.append(playerWins[i] + playerLosses[i])
-            playerWinrate.append(round(playerWins[i] / playerGamesPlayed[i], 2))
+            playerWinrate.append(round((playerWins[i] / playerGamesPlayed[i]) * 100, 2))
         except IndexError:
             playerRank.append("No Data")
             playerWins.append("No Data")
